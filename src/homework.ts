@@ -40,6 +40,7 @@ class Item {
 let item = new Item('Apple', 100);
 console.log(item.getItemInfo());
 
+
 /**
  * task 02
  * 
@@ -48,12 +49,36 @@ console.log(item.getItemInfo());
  * в котором будет записана строка ‘admin’ или ‘user’ данную строку 
  * нужно передать в декоратор при вызове. Сам класс и имя декоратора 
  * может быть произвольным.
-
+ * 
  */
 
-class User {
+function addDate(type: string) {
+    return function(targetClass) {
+        return class {
+            public name: string;
+            public type: string = type;
+            getType() {
+                return this.type;
+            }
 
+            constructor(name) {
+                this.name = name;
+            }
+        }
+    }
 }
+
+@addDate('admin')
+class User {
+    public name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+}
+
+const userOne = new User('Ivan');
+
 
 /**
  * task 03
