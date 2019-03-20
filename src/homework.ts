@@ -88,34 +88,41 @@ const userOne = new User('Ivan');
  * интерфейса и по два класса. Переделайте это в namespaces.
  */
 
-// News api USA
-interface INews {
-    id: number;
-    title: string;
-    text: string;
-    author: string;
+namespace gettingApiUSA {
+    // News api USA
+    export interface INews {
+        id: number;
+        title: string;
+        text: string;
+        author: string;
+    }
+    export class NewsService {
+        protected apiurl: string = 'https://news_api_usa_url'
+        public getNews(): void { 
+            console.log('Get news USA') 
+        } // method
+    }
+}
+namespace gettingApiUA {
+    // News api Ukraine
+    export interface INews2 {
+        uuid: string;
+        title: string;
+        body: string;
+        author: string;
+        date: string;
+        imgUrl: string;
+    }
+
+    export class NewsService2 {
+        protected apiurl: string = 'https://news_api_2_url'
+        public getNews(): void { console.log('Get news UA') } // method get all news
+        public addToFavorite(): void { console.log('Favorites') } // method add to favorites
+    }
 }
 
-class NewsService {
-    protected apiurl: string = 'https://news_api_usa_url'
-    public getNews() {} // method
-}
+const newsUSA: gettingApiUSA.NewsService = new gettingApiUSA.NewsService();
 
-// News api Ukraine
-interface INews2 {
-    uuid: string;
-    title: string;
-    body: string;
-    author: string;
-    date: string;
-    imgUrl: string;
-}
-
-class NewsService2 {
-    protected apiurl: string = 'https://news_api_2_url'
-    public getNews() {} // method get all news
-    public addToFavorite() {} // method add to favorites
-}
 
 /**
  * task 04
@@ -138,8 +145,26 @@ class Middle {
     }
 }
 
-class Senior {
-    createArchitecture() {
-        
-    }
+class Senior implements Junior, Middle {
+  doTasks: () => void;
+  createApp: () => void;
+  createArchitecture() {
+    console.log('Senior!');
+  }
 }
+applyMixins (Senior, [Junior, Middle]);
+
+function applyMixins(derivedCtor: any, baseCtors: any[]) {
+    baseCtors.forEach(baseCtor => {
+        Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+             if (name !== 'constructor') {
+                derivedCtor.prototype[name] = baseCtor.prototype[name];
+            }
+        });
+    }); 
+}
+
+let superDeveloper = new Senior();
+superDeveloper.doTasks();
+superDeveloper.createApp();
+superDeveloper.createArchitecture();
